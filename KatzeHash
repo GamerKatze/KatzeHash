@@ -1,0 +1,47 @@
+import hashlib
+
+
+file= input("do you want to use the Pre generated password or a Wordlist? p/w ")
+
+
+
+
+
+def hash_wordlist(wordlist, user_hash, encrypt=True):
+    if wordlist =='p'or'P':
+     wordlist == 'generated_passwords.txt'
+     print("Put into Generated Passwords mode")
+    elif wordlist == 'w' or 'W':
+        wordlist == 'wordlist.txt'
+        print("Put into Wordlist mode")
+    
+    with open(wordlist, 'r') as f: 
+        for word in f:
+            word = word.strip()
+            hashed_word = hashlib.sha256(word.encode()).hexdigest()
+            if hashed_word == user_hash:
+                return word if encrypt else hashed_word
+    return None
+
+def main():
+    user_choice = input("Do you want to encrypt a hash or decrypt a hash (e/d): ").lower()
+
+    if user_choice == 'e'or'E':
+        user_hash = input("Enter the hash to compare against: ")
+        result = hash_wordlist(wordlist, user_hash)
+        if result:
+            print(f"The word corresponding to the hash is: {result}")
+        else:
+            print("No match found in the wordlist.")
+    elif user_choice == 'd'or 'D':
+        user_hash = input("Enter the hash to encrypt: ")
+        result = hash_wordlist(wordlist, user_hash, encrypt=False)
+        if result:
+            print(f"The hash corresponding to the word is: {result}")
+        else:
+            print("No match found in the wordlist.")
+    else:
+        print("Invalid choice. Please enter 'encrypt' or 'decrypt'.")
+
+if __name__ == "__main__":
+    main()
